@@ -1,0 +1,67 @@
+<div class="login-container">
+    <div class="login-card card-glass fade-in">
+        <!-- Logo y título -->
+        <div class="login-header">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <span class="material-icons">shield</span>
+                </div>
+            </div>
+            <h1>Sistema PNP</h1>
+            <p>Gestión de Personal de la Policía Nacional del Perú</p>
+        </div>
+
+        <!-- Formulario de login -->
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <!-- Usuario -->
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    <span class="material-icons">person</span>
+                    Usuario
+                </label>
+                <input type="text" id="username" class="form-input" [(ngModel)]="credentials.username" name="username"
+                    placeholder="Ingrese su usuario" required [disabled]="loading" />
+            </div>
+
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <span class="material-icons">lock</span>
+                    Contraseña
+                </label>
+                <input type="password" id="password" class="form-input" [(ngModel)]="credentials.password"
+                    name="password" placeholder="Ingrese su contraseña" required [disabled]="loading" />
+            </div>
+
+            <!-- Mensaje de error -->
+            <div *ngIf="errorMessage" class="error-message">
+                <span class="material-icons">error</span>
+                {{ errorMessage }}
+            </div>
+
+            <!-- Botón de login -->
+            <button type="submit" class="btn btn-primary btn-login" [disabled]="loading || !loginForm.valid">
+                <span *ngIf="!loading">
+                    <span class="material-icons">login</span>
+                    Iniciar Sesión
+                </span>
+                <span *ngIf="loading" class="loading-spinner">
+                    <span class="spinner"></span>
+                    Iniciando sesión...
+                </span>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>© 2024 Policía Nacional del Perú</p>
+        </div>
+    </div>
+
+    <!-- Background decoration -->
+    <div class="bg-decoration">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+# Archivos compilados y dependencias
+**/target/
+**/node_modules/
+**/dist/
+**/build/
+**/.angular/
+
+# Archivos IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+logs/
+
+# Base de datos local
+*.db
+*.sqlite
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Docker volúmenes
+postgres_data/
+
+# Variables de entorno sensibles
+.env
+*.env
+
+# Archivos de configuración local
+application-local.yml
+application-local.properties

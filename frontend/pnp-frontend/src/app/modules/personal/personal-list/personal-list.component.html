@@ -1,0 +1,145 @@
+<div class="personal-list-container">
+    <!-- Header con estadísticas -->
+    <div class="page-header fade-in">
+        <div class="header-content">
+            <h1>
+                <span class="material-icons">badge</span>
+                Gestión de Personal PNP
+            </h1>
+            <button class="btn btn-primary" (click)="createNew()">
+                <span class="material-icons">add</span>
+                Nuevo Personal
+            </button>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div *ngIf="stats" class="stats-grid fade-in">
+        <div class="stat-card card">
+            <div class="stat-icon" style="background: var(--gradient-primary)">
+                <span class="material-icons">groups</span>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.total }}</h3>
+                <p>Total Personal</p>
+            </div>
+        </div>
+
+        <div class="stat-card card">
+            <div class="stat-icon" style="background: var(--gradient-accent)">
+                <span class="material-icons">how_to_reg</span>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.activos }}</h3>
+                <p>Activos</p>
+            </div>
+        </div>
+
+        <div class="stat-card card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #ff9800 100%)">
+                <span class="material-icons"> event</span>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.enLicencia }}</h3>
+                <p>En Licencia</p>
+            </div>
+        </div>
+
+        <div class="stat-card card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%)">
+                <span class="material-icons">person_off</span>
+            </div>
+            <div class="stat-content">
+                <h3>{{ stats.inactivos }}</h3>
+                <p>Inactivos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-bar card fade-in">
+        <div class="search-input-container">
+            <span class="material-icons">search</span>
+            <input type="text" class="search-input" placeholder="Buscar por CIP, DNI, nombre..."
+                [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" />
+            <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <button class="btn btn-accent" (click)="onSearch()">
+            Buscar
+        </button>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="error-banner">
+        <span class="material-icons">error</span>
+        {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Cargando personal...</p>
+    </div>
+
+    <!-- Tabla de personal -->
+    <div *ngIf="!loading && filteredList.length > 0" class="table-container card fade-in">
+        <table>
+            <thead>
+                <tr>
+                    <th>CIP</th>
+                    <th>DNI</th>
+                    <th>Nombre Completo</th>
+                    <th>Rango</th>
+                    <th>Unidad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let personal of filteredList">
+                    <td><strong>{{ personal.cip }}</strong></td>
+                    <td>{{ personal.dni }}</td>
+                    <td>
+                        <div class="personal-name">
+                            {{ personal.apellidoPaterno }} {{ personal.apellidoMaterno }}, {{ personal.nombres }}
+                        </div>
+                    </td>
+                    <td>{{ personal.rango }}</td>
+                    <td>{{ personal.unidad }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="getEstadoBadgeClass(personal.estado)">
+                            {{ personal.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-info" (click)="viewDetails(personal.id!)" title="Ver detalles">
+                                <span class="material-icons">visibility</span>
+                            </button>
+                            <button class="btn-icon btn-edit" (click)="editPersonal(personal.id!)" title="Editar">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn-icon btn-delete" (click)="deletePersonal(personal.id!, personal.nombres)"
+                                title="Eliminar">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="!loading && filteredList.length === 0" class="empty-state card">
+        <span class="material-icons">person_search</span>
+        <h3>No se encontraron resultados</h3>
+        <p>No hay personal registrado o no coincide con tu búsqueda</p>
+        <button class="btn btn-primary" (click)="createNew()">
+            <span class="material-icons">add</span>
+            Registrar Nuevo Personal
+        </button>
+    </div>
+</div>
