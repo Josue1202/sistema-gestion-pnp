@@ -6,18 +6,18 @@ spring:
     name: auth-service
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/pnp_auth
-    username: pnp_admin
-    password: pnp_password
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://localhost:3306/bd_policia?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
 eureka:

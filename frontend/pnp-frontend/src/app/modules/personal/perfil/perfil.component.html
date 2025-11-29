@@ -1,0 +1,349 @@
+<div class="perfil-container">
+    <div class="header-perfil">
+        <div class="info-personal">
+            <h1>{{ personal?.nombres }} {{ personal?.apellidos }}</h1>
+            <p><strong>CIP:</strong> {{ personal?.cip }} | <strong>Grado:</strong> {{ personal?.grado }}</p>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+        <button [class.active]="activeTab === 'datos'" (click)="activeTab = 'datos'">Datos Personales</button>
+        <button [class.active]="activeTab === 'ascensos'" (click)="activeTab = 'ascensos'">Ascensos ({{ ascensos.length
+            }})</button>
+        <button [class.active]="activeTab === 'servicios'" (click)="activeTab = 'servicios'">Servicios ({{
+            servicios.length }})</button>
+        <button [class.active]="activeTab === 'cursos'" (click)="activeTab = 'cursos'">Cursos ({{ cursos.length
+            }})</button>
+        <button [class.active]="activeTab === 'familiares'" (click)="activeTab = 'familiares'">Familiares ({{
+            familiares.length }})</button>
+        <button [class.active]="activeTab === 'asignaciones'" (click)="activeTab = 'asignaciones'">Asignaciones</button>
+        <button [class.active]="activeTab === 'vacaciones'" (click)="activeTab = 'vacaciones'">Vacaciones</button>
+    </div>
+
+    <!-- Tab Content: Datos Personales -->
+    <div class="tab-content" *ngIf="activeTab === 'datos'">
+        <div class="card">
+            <h2>Información Personal</h2>
+            <div class="info-grid">
+                <div><strong>CIP:</strong> {{ personal?.cip }}</div>
+                <div><strong>DNI:</strong> {{ personal?.dni || 'N/A' }}</div>
+                <div><strong>Nombres:</strong> {{ personal?.nombres }}</div>
+                <div><strong>Apellidos:</strong> {{ personal?.apellidos }}</div>
+                <div><strong>Grado:</strong> {{ personal?.grado }}</div>
+                <div><strong>Especialidad:</strong> {{ personal?.especialidad || 'N/A' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Content: Ascensos -->
+    <div class="tab-content" *ngIf="activeTab === 'ascensos'">
+        <div class="tab-header">
+            <h2>Historial de Ascensos</h2>
+            <button class="btn btn-primary" (click)="openModalAscenso()">+ Agregar Ascenso</button>
+        </div>
+
+        <div class="card" *ngIf="ascensos.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Grado</th>
+                        <th>Fecha</th>
+                        <th>R.D.</th>
+                        <th>Motivo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ascenso of ascensos">
+                        <td>{{ ascenso.grado }}</td>
+                        <td>{{ ascenso.fecha }}</td>
+                        <td>{{ ascenso.rd || '-' }}</td>
+                        <td>{{ ascenso.motivo || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarAscenso(ascenso.idAscenso!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="ascensos.length === 0">
+            <p>No hay ascensos registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Servicios -->
+    <div class="tab-content" *ngIf="activeTab === 'servicios'">
+        <div class="tab-header">
+            <h2>Historial de Servicios</h2>
+            <button class="btn btn-primary" (click)="openModalServicio()">+ Agregar Servicio</button>
+        </div>
+
+        <div class="card" *ngIf="servicios.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Unidad</th>
+                        <th>Cargo</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let servicio of servicios">
+                        <td>{{ servicio.unidad }}</td>
+                        <td>{{ servicio.cargo || '-' }}</td>
+                        <td>{{ servicio.desde }}</td>
+                        <td>{{ servicio.hasta || 'Actual' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarServicio(servicio.idServicio!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="servicios.length === 0">
+            <p>No hay servicios registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Cursos -->
+    <div class="tab-content" *ngIf="activeTab === 'cursos'">
+        <div class="tab-header">
+            <h2>Cursos y Capacitaciones</h2>
+            <button class="btn btn-primary" (click)="openModalCurso()">+ Agregar Curso</button>
+        </div>
+
+        <div class="card" *ngIf="cursos.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Nombre</th>
+                        <th>Lugar</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let curso of cursos">
+                        <td><span class="badge" [class.badge-primary]="curso.tipo === 'INSTITUCIONAL'"
+                                [class.badge-secondary]="curso.tipo === 'EXTRA'">{{ curso.tipo }}</span></td>
+                        <td>{{ curso.nombre }}</td>
+                        <td>{{ curso.lugar || '-' }}</td>
+                        <td>{{ curso.fecha || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarCurso(curso.idCurso!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="cursos.length === 0">
+            <p>No hay cursos registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Familiares -->
+    <div class="tab-content" *ngIf="activeTab === 'familiares'">
+        <div class="tab-header">
+            <h2>Núcleo Familiar</h2>
+            <button class="btn btn-primary" (click)="openModalFamiliar()">+ Agregar Familiar</button>
+        </div>
+
+        <div class="card" *ngIf="familiares.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombres y Apellidos</th>
+                        <th>Parentesco</th>
+                        <th>Fecha Nac.</th>
+                        <th>Lugar Nac.</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let familiar of familiares">
+                        <td>{{ familiar.nombresApellidos }}</td>
+                        <td>{{ familiar.parentesco }}</td>
+                        <td>{{ familiar.fechaNac || '-' }}</td>
+                        <td>{{ familiar.lugarNac || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarFamiliar(familiar.idFamiliar!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="familiares.length === 0">
+            <p>No hay familiares registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Asignaciones (solo lectura) -->
+    <div class="tab-content" *ngIf="activeTab === 'asignaciones'">
+        <div class="card">
+            <h2>Asignaciones Diarias</h2>
+            <p class="text-muted">Funcionalidad en desarrollo</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Vacaciones (solo lectura) -->
+    <div class="tab-content" *ngIf="activeTab === 'vacaciones'">
+        <div class="card">
+            <h2>Gestión de Vacaciones</h2>
+            <p class="text-muted">Funcionalidad en desarrollo</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODALES -->
+
+<!-- Modal Ascenso -->
+<div class="modal" *ngIf="showModalAscenso" (click)="closeModalAscenso()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Agregar Ascenso</h3>
+            <button class="btn-close" (click)="closeModalAscenso()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Grado *</label>
+                <input type="text" [(ngModel)]="formAscenso.grado" class="form-control" placeholder="Ej: Capitán">
+            </div>
+            <div class="form-group">
+                <label>Fecha *</label>
+                <input type="date" [(ngModel)]="formAscenso.fecha" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>R.D.</label>
+                <input type="text" [(ngModel)]="formAscenso.rd" class="form-control" placeholder="Ej: RD-2024-001">
+            </div>
+            <div class="form-group">
+                <label>Motivo</label>
+                <textarea [(ngModel)]="formAscenso.motivo" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModalAscenso()">Cancelar</button>
+            <button class="btn btn-primary" (click)="agregarAscenso()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Servicio -->
+<div class="modal" *ngIf="showModalServicio" (click)="closeModalServicio()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Agregar Servicio</h3>
+            <button class="btn-close" (click)="closeModalServicio()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Unidad *</label>
+                <input type="text" [(ngModel)]="formServicio.unidad" class="form-control" placeholder="Ej: DIVINCRI">
+            </div>
+            <div class="form-group">
+                <label>Cargo</label>
+                <input type="text" [(ngModel)]="formServicio.cargo" class="form-control"
+                    placeholder="Ej: Jefe de División">
+            </div>
+            <div class="form-group">
+                <label>Desde *</label>
+                <input type="date" [(ngModel)]="formServicio.desde" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Hasta</label>
+                <input type="date" [(ngModel)]="formServicio.hasta" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModalServicio()">Cancelar</button>
+            <button class="btn btn-primary" (click)="agregarServicio()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Curso -->
+<div class="modal" *ngIf="showModalCurso" (click)="closeModalCurso()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Agregar Curso</h3>
+            <button class="btn-close" (click)="closeModalCurso()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Tipo *</label>
+                <select [(ngModel)]="formCurso.tipo" class="form-control">
+                    <option value="INSTITUCIONAL">Institucional</option>
+                    <option value="EXTRA">Extra-Institucional</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" [(ngModel)]="formCurso.nombre" class="form-control"
+                    placeholder="Ej: Curso de Investigación Criminal">
+            </div>
+            <div class="form-group">
+                <label>Lugar</label>
+                <input type="text" [(ngModel)]="formCurso.lugar" class="form-control" placeholder="Ej: EO-PNP">
+            </div>
+            <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" [(ngModel)]="formCurso.fecha" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModalCurso()">Cancelar</button>
+            <button class="btn btn-primary" (click)="agregarCurso()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Familiar -->
+<div class="modal" *ngIf="showModalFamiliar" (click)="closeModalFamiliar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Agregar Familiar</h3>
+            <button class="btn-close" (click)="closeModalFamiliar()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nombres y Apellidos *</label>
+                <input type="text" [(ngModel)]="formFamiliar.nombresApellidos" class="form-control"
+                    placeholder="Ej: María García López">
+            </div>
+            <div class="form-group">
+                <label>Parentesco *</label>
+                <select [(ngModel)]="formFamiliar.parentesco" class="form-control">
+                    <option value="CÓNYUGE">Cónyuge</option>
+                    <option value="HIJO">Hijo/a</option>
+                    <option value="PADRE">Padre</option>
+                    <option value="MADRE">Madre</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" [(ngModel)]="formFamiliar.fechaNac" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Lugar de Nacimiento</label>
+                <input type="text" [(ngModel)]="formFamiliar.lugarNac" class="form-control"
+                    placeholder="Ej: Lima, Perú">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModalFamiliar()">Cancelar</button>
+            <button class="btn btn-primary" (click)="agregarFamiliar()">Guardar</button>
+        </div>
+    </div>
+</div>
