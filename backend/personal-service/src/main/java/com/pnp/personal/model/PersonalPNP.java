@@ -16,7 +16,7 @@ import java.util.List;
  * Representa a un miembro del personal de la Policía Nacional del Perú
  */
 @Entity
-@Table(name = "personal_pnp")
+@Table(name = "personal")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,8 @@ public class PersonalPNP {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_personal")
+    private Long idPersonal;
 
     @NotBlank(message = "El CIP es obligatorio")
     @Size(max = 20, message = "El CIP debe tener máximo 20 caracteres")
@@ -33,93 +34,89 @@ public class PersonalPNP {
 
     @NotBlank(message = "El DNI es obligatorio")
     @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 dígitos")
-    @Column(unique = true, nullable = false, length = 8)
+    @Column(unique = true, nullable = false, length = 10)
     private String dni;
 
-    @NotBlank(message = "El apellido paterno es obligatorio")
-    @Size(max = 100)
-    @Column(name = "apellido_paterno", nullable = false, length = 100)
-    private String apellidoPaterno;
+    @Column(length = 100)
+    private String apellidos;
 
-    @NotBlank(message = "El apellido materno es obligatorio")
-    @Size(max = 100)
-    @Column(name = "apellido_materno", nullable = false, length = 100)
-    private String apellidoMaterno;
-
-    @NotBlank(message = "Los nombres son obligatorios")
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String nombres;
 
-    @NotNull(message = "La fecha de nacimiento es obligatoria")
-    @Column(name = "fecha_nacimiento", nullable = false)
-    private LocalDate fechaNacimiento;
+    @Column(length = 50)
+    private String grado;
 
-    @NotBlank(message = "El género es obligatorio")
-    @Pattern(regexp = "[MF]", message = "El género debe ser M o F")
-    @Column(nullable = false, length = 1)
-    private String genero;
-
-    @Size(max = 15)
-    @Column(length = 15)
-    private String telefono;
-
-    @Email(message = "El email debe ser válido")
-    @Size(max = 100)
-    @Column(length = 100)
-    private String email;
-
-    @Column(columnDefinition = "TEXT")
-    private String direccion;
-
-    @NotBlank(message = "El rango es obligatorio")
-    @Size(max = 50)
-    @Column(nullable = false, length = 50)
-    private String rango;
-
-    @Size(max = 100)
     @Column(length = 100)
     private String especialidad;
 
-    @NotBlank(message = "La unidad es obligatoria")
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
-    private String unidad;
+    @Column(name = "grupo_sanguineo", length = 5)
+    private String grupoSanguineo;
 
-    @NotBlank(message = "El estado es obligatorio")
-    @Column(nullable = false, length = 20)
-    private String estado; // ACTIVO, INACTIVO, LICENCIA
+    @Column(columnDefinition = "TEXT")
+    private String domicilio;
 
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @Column(name = "fecha_ingreso", nullable = false)
+    @Column(length = 50)
+    private String distrito;
+
+    @Column(length = 20)
+    private String telefono;
+
+    @Column(length = 20)
+    private String celular;
+
+    @Column(length = 100)
+    private String correo;
+
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "fecha_ingreso")
     private LocalDate fechaIngreso;
 
-    @Size(max = 255)
-    @Column(name = "foto_url", length = 255)
-    private String fotoUrl;
+    @Column(name = "fecha_egreso")
+    private LocalDate fechaEgreso;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "ultimo_ascenso")
+    private LocalDate ultimoAscenso;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "estado_civil", length = 20)
+    private String estadoCivil;
+
+    @Column(name = "n_hijos")
+    private Integer nHijos;
+
+    @Column(name = "fecha_incorporacion")
+    private LocalDate fechaIncorporacion;
+
+    @Column(length = 50)
+    private String division;
+
+    @Column(length = 50)
+    private String comisaria;
+
+    @Column(name = "color_piel", length = 20)
+    private String colorPiel;
+
+    @Column(precision = 4, scale = 2)
+    private Double estatura;
+
+    @Column(precision = 5, scale = 2)
+    private Double peso;
+
+    @Column(name = "talla_calzado", length = 5)
+    private String tallaCalzado;
+
+    @Column(name = "talla_camisa", length = 5)
+    private String tallaCamisa;
+
+    @Column(length = 50)
+    private String profesion;
 
     @OneToMany(mappedBy = "personal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FuncionPolicial> funciones = new ArrayList<>();
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     // Método helper para obtener nombre completo
     public String getNombreCompleto() {
-        return apellidoPaterno + " " + apellidoMaterno + ", " + nombres;
+        return apellidos + ", " + nombres;
     }
 }
