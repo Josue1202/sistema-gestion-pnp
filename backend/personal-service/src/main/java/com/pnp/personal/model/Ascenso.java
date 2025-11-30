@@ -1,12 +1,17 @@
 package com.pnp.personal.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "ascenso")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ascenso {
 
     @Id
@@ -18,15 +23,20 @@ public class Ascenso {
     @JoinColumn(name = "id_personal", nullable = false)
     private PersonalPNP personal;
 
-    @Column(name = "grado", length = 50)
-    private String grado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_grado_anterior")
+    private GradoPolicial gradoAnterior;
 
-    @Column(name = "rd", length = 50)
-    private String rd;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_grado_nuevo", nullable = false)
+    private GradoPolicial gradoNuevo;
 
-    @Column(name = "fecha")
-    private LocalDate fecha;
+    @Column(name = "fecha_ascenso", nullable = false)
+    private LocalDate fechaAscenso;
 
-    @Column(name = "motivo", length = 200)
+    @Column(name = "rd_documento", length = 50)
+    private String rdDocumento;
+
+    @Column(columnDefinition = "TEXT")
     private String motivo;
 }

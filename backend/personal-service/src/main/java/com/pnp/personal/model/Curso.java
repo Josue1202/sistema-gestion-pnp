@@ -22,17 +22,26 @@ public class Curso {
     @Column(name = "tipo", length = 20)
     private TipoCurso tipo;
 
-    @Column(name = "nombre", length = 200)
+    @Column(name = "nombre", length = 150)
     private String nombre;
 
-    @Column(name = "lugar", length = 100)
-    private String lugar;
+    @Column(name = "institucion", length = 100)
+    private String institucion;
 
-    @Column(name = "fecha")
-    private LocalDate fecha;
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
+
+    @Column(name = "horas")
+    private Integer horas;
+
+    @Column(name = "certificado_url")
+    private String certificadoUrl;
 
     public enum TipoCurso {
         INSTITUCIONAL,
-        EXTRA
+        EXTRA_INSTITUCIONAL
     }
 }

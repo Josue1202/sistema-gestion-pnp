@@ -6,6 +6,7 @@ import com.pnp.personal.model.PersonalPNP;
 import com.pnp.personal.repository.CursoRepository;
 import com.pnp.personal.repository.PersonalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/cursos")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class CursoController {
 
     private final CursoRepository cursoRepository;
@@ -23,7 +24,7 @@ public class CursoController {
 
     @GetMapping("/personal/{idPersonal}")
     public ResponseEntity<List<CursoDTO>> getByPersonal(@PathVariable Long idPersonal) {
-        List<Curso> cursos = cursoRepository.findByPersonalIdPersonalOrderByFechaDesc(idPersonal);
+        List<Curso> cursos = cursoRepository.findByPersonalIdPersonalOrderByFechaInicioDesc(idPersonal);
         List<CursoDTO> dtos = cursos.stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -39,26 +40,36 @@ public class CursoController {
         curso.setPersonal(personal);
         curso.setTipo(Curso.TipoCurso.valueOf(dto.getTipo()));
         curso.setNombre(dto.getNombre());
-        curso.setLugar(dto.getLugar());
-        curso.setFecha(dto.getFecha());
+        curso.setInstitucion(dto.getInstitucion());
+        curso.setFechaInicio(dto.getFechaInicio());
+        curso.setFechaFin(dto.getFechaFin());
+        curso.setHoras(dto.getHoras());
+        curso.setCertificadoUrl(dto.getCertificadoUrl());
 
         Curso saved = cursoRepository.save(curso);
-        return ResponseEntity.ok(toDTO(saved));
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (!cursoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         cursoRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private CursoDTO toDTO(Curso c) {
         CursoDTO dto = new CursoDTO();
         dto.setIdCurso(c.getIdCurso());
+        dto.setIdPersonal(c.getPersonal().getIdPersonal());
         dto.setTipo(c.getTipo().name());
         dto.setNombre(c.getNombre());
-        dto.setLugar(c.getLugar());
-        dto.setFecha(c.getFecha());
+        dto.setInstitucion(c.getInstitucion());
+        dto.setFechaInicio(c.getFechaInicio());
+        dto.setFechaFin(c.getFechaFin());
+        dto.setHoras(c.getHoras());
+        dto.setCertificadoUrl(c.getCertificadoUrl());
         return dto;
     }
 }

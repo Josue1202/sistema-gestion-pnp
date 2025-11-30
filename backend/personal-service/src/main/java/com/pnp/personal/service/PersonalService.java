@@ -50,10 +50,14 @@ public class PersonalService {
 
     /**
      * Obtiene personal por unidad
+     * TODO: Actualizar para usar FK a UnidadPolicial
      */
-    public List<PersonalPNP> getPersonalByUnidad(String unidad) {
-        return personalRepository.findByUnidad(unidad);
-    }
+    // DESHABILITADO - Necesita actualización para BD normalizada
+    /*
+     * public List<PersonalPNP> getPersonalByUnidad(Long idUnidad) {
+     * return personalRepository.findByUnidadActual_IdUnidad(idUnidad);
+     * }
+     */
 
     /**
      * Busca personal por query
@@ -82,6 +86,8 @@ public class PersonalService {
 
     /**
      * Actualiza personal existente
+     * TODO: Reimplementar con campos normalizados (apellidos, grado FK, unidad FK,
+     * etc.)
      */
     @Transactional
     public PersonalPNP updatePersonal(Long id, PersonalPNP personalActualizado) {
@@ -89,33 +95,38 @@ public class PersonalService {
 
         // Validar que el CIP no esté siendo usado por otro personal
         if (!personal.getCip().equals(personalActualizado.getCip()) &&
-            personalRepository.existsByCip(personalActualizado.getCip())) {
+                personalRepository.existsByCip(personalActualizado.getCip())) {
             throw new RuntimeException("El CIP ya está registrado: " + personalActualizado.getCip());
         }
 
         // Validar que el DNI no esté siendo usado por otro personal
         if (!personal.getDni().equals(personalActualizado.getDni()) &&
-            personalRepository.existsByDni(personalActualizado.getDni())) {
+                personalRepository.existsByDni(personalActualizado.getDni())) {
             throw new RuntimeException("El DNI ya está registrado: " + personalActualizado.getDni());
         }
 
-        // Actualizar campos
+        // Actualizar campos básicos (campos normalizados)
         personal.setCip(personalActualizado.getCip());
         personal.setDni(personalActualizado.getDni());
-        personal.setApellidoPaterno(personalActualizado.getApellidoPaterno());
-        personal.setApellidoMaterno(personalActualizado.getApellidoMaterno());
+        personal.setApellidos(personalActualizado.getApellidos());
         personal.setNombres(personalActualizado.getNombres());
+        personal.setSexo(personalActualizado.getSexo());
         personal.setFechaNacimiento(personalActualizado.getFechaNacimiento());
-        personal.setGenero(personalActualizado.getGenero());
         personal.setTelefono(personalActualizado.getTelefono());
-        personal.setEmail(personalActualizado.getEmail());
-        personal.setDireccion(personalActualizado.getDireccion());
-        personal.setRango(personalActualizado.getRango());
+        personal.setCelular(personalActualizado.getCelular());
+        personal.setCorreo(personalActualizado.getCorreo());
+        personal.setDomicilio(personalActualizado.getDomicilio());
         personal.setEspecialidad(personalActualizado.getEspecialidad());
-        personal.setUnidad(personalActualizado.getUnidad());
         personal.setEstado(personalActualizado.getEstado());
         personal.setFechaIngreso(personalActualizado.getFechaIngreso());
-        personal.setFotoUrl(personalActualizado.getFotoUrl());
+
+        // Relaciones FK (grado, unidad, ubigeos) deben manejarse por separado
+        if (personalActualizado.getGrado() != null) {
+            personal.setGrado(personalActualizado.getGrado());
+        }
+        if (personalActualizado.getUnidadActual() != null) {
+            personal.setUnidadActual(personalActualizado.getUnidadActual());
+        }
 
         return personalRepository.save(personal);
     }

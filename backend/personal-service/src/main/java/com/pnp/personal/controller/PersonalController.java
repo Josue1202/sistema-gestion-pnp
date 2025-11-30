@@ -77,14 +77,8 @@ public class PersonalController {
         }
     }
 
-    /**
-     * Obtiene personal por unidad
-     */
-    @GetMapping("/unidad/{unidad}")
-    public ResponseEntity<List<PersonalPNP>> getPersonalByUnidad(@PathVariable String unidad) {
-        List<PersonalPNP> personal = personalService.getPersonalByUnidad(unidad);
-        return ResponseEntity.ok(personal);
-    }
+    // Endpoint deshabilitado - necesita FK
+    // TODO: Reimplementar con id_unidad
 
     /**
      * Busca personal
@@ -114,8 +108,8 @@ public class PersonalController {
      * Actualiza personal existente
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePersonal(@PathVariable Long id, 
-                                           @Valid @RequestBody PersonalPNP personal) {
+    public ResponseEntity<?> updatePersonal(@PathVariable Long id,
+            @Valid @RequestBody PersonalPNP personal) {
         try {
             PersonalPNP personalActualizado = personalService.updatePersonal(id, personal);
             return ResponseEntity.ok(personalActualizado);

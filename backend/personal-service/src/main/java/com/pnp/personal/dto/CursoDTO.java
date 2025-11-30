@@ -6,8 +6,12 @@ import java.time.LocalDate;
 @Data
 public class CursoDTO {
     private Long idCurso;
-    private String tipo; // "INSTITUCIONAL" o "EXTRA"
+    private Long idPersonal;
+    private String tipo; // "INSTITUCIONAL" o "EXTRA_INSTITUCIONAL"
     private String nombre;
-    private String lugar;
-    private LocalDate fecha;
+    private String institucion;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private Integer horas;
+    private String certificadoUrl;
 }

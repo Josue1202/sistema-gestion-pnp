@@ -6,6 +6,7 @@ import com.pnp.personal.model.PersonalPNP;
 import com.pnp.personal.repository.FamiliarRepository;
 import com.pnp.personal.repository.PersonalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/familiares")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class FamiliarController {
 
     private final FamiliarRepository familiarRepository;
@@ -38,27 +39,37 @@ public class FamiliarController {
         Familiar familiar = new Familiar();
         familiar.setPersonal(personal);
         familiar.setNombresApellidos(dto.getNombresApellidos());
-        familiar.setFechaNac(dto.getFechaNac());
-        familiar.setLugarNac(dto.getLugarNac());
         familiar.setParentesco(Familiar.Parentesco.valueOf(dto.getParentesco()));
+        familiar.setFechaNacimiento(dto.getFechaNacimiento());
+        familiar.setDni(dto.getDni());
+        familiar.setLugarNacimiento(dto.getLugarNacimiento());
+        familiar.setViveConEfectivo(dto.getViveConEfectivo());
+        familiar.setEsDependiente(dto.getEsDependiente());
 
         Familiar saved = familiarRepository.save(familiar);
-        return ResponseEntity.ok(toDTO(saved));
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (!familiarRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         familiarRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private FamiliarDTO toDTO(Familiar f) {
         FamiliarDTO dto = new FamiliarDTO();
         dto.setIdFamiliar(f.getIdFamiliar());
+        dto.setIdPersonal(f.getPersonal().getIdPersonal());
         dto.setNombresApellidos(f.getNombresApellidos());
-        dto.setFechaNac(f.getFechaNac());
-        dto.setLugarNac(f.getLugarNac());
         dto.setParentesco(f.getParentesco().name());
+        dto.setFechaNacimiento(f.getFechaNacimiento());
+        dto.setDni(f.getDni());
+        dto.setLugarNacimiento(f.getLugarNacimiento());
+        dto.setViveConEfectivo(f.getViveConEfectivo());
+        dto.setEsDependiente(f.getEsDependiente());
         return dto;
     }
 }

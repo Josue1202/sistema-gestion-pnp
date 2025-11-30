@@ -18,23 +18,35 @@ public class Familiar {
     @JoinColumn(name = "id_personal", nullable = false)
     private PersonalPNP personal;
 
-    @Column(name = "nombres_apellidos", length = 200)
+    @Column(name = "nombres_apellidos", length = 100)
     private String nombresApellidos;
-
-    @Column(name = "fecha_nac")
-    private LocalDate fechaNac;
-
-    @Column(name = "lugar_nac", length = 100)
-    private String lugarNac;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "parentesco", length = 20)
     private Parentesco parentesco;
 
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "dni", length = 10)
+    private String dni;
+
+    @Column(name = "lugar_nacimiento", length = 100)
+    private String lugarNacimiento;
+
+    @Column(name = "vive_con_efectivo")
+    private Boolean viveConEfectivo;
+
+    @Column(name = "es_dependiente")
+    private Boolean esDependiente;
+
     public enum Parentesco {
         CÓNYUGE,
         HIJO,
+        HIJA,
         PADRE,
-        MADRE
+        MADRE,
+        HERMANO,
+        HERMANA
     }
 }
