@@ -31,17 +31,11 @@ public class AuthService {
             throw new RuntimeException("El nombre de usuario ya está en uso");
         }
 
-        // Verificar si el CIP ya existe (si se proporcionó)
-        if (request.getCip() != null && usuarioRepository.existsByCip(request.getCip())) {
-            throw new RuntimeException("El CIP ya está registrado");
-        }
-
         // Crear nuevo usuario
         Usuario usuario = new Usuario();
         usuario.setUsername(request.getUsername());
         usuario.setPassword(passwordEncoder.encode(request.getPassword()));
-        usuario.setCip(request.getCip());
-        usuario.setRol(request.getRol());
+        usuario.setIdRol(1L); // ROL por defecto (OPERADOR)
         usuario.setActivo(true);
 
         return usuarioRepository.save(usuario);
@@ -51,34 +45,47 @@ public class AuthService {
      * Autentica un usuario y devuelve un token JWT
      */
     public LoginResponse login(LoginRequest request) {
+        System.out.println("=== LOGIN DEBUG ===");
+        System.out.println("Username: " + request.getUsername());
+
         // Buscar usuario
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario o contraseña incorrectos"));
+                .orElseThrow(() -> {
+                    System.out.println("ERROR: Usuario no encontrado");
+                    return new RuntimeException("Usuario o contraseña incorrectos");
+                });
+
+        System.out.println("Usuario encontrado: " + usuario.getUsername());
+        System.out.println("Password hash: " + usuario.getPassword());
+        System.out.println("Activo: " + usuario.getActivo());
 
         // Verificar si el usuario está activo
-        if (!usuario.getActivo()) {
+        if (usuario.getActivo() == null || !usuario.getActivo()) {
+            System.out.println("ERROR: Usuario inactivo");
             throw new RuntimeException("Usuario inactivo");
         }
 
+        System.out.println("Verificando contraseña...");
         // Verificar contraseña
         if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+            System.out.println("ERROR: Contraseña incorrecta");
             throw new RuntimeException("Usuario o contraseña incorrectos");
         }
 
+        System.out.println("Contraseña correcta, generando token...");
         // Generar token JWT
         String token = jwtService.generateToken(
                 usuario.getUsername(),
-                usuario.getRol(),
-                usuario.getCip()
-        );
+                "USER",
+                null);
 
+        System.out.println("Token generado exitosamente");
         return new LoginResponse(
                 token,
                 usuario.getId(),
                 usuario.getUsername(),
-                usuario.getRol(),
-                usuario.getCip()
-        );
+                "USER",
+                null);
     }
 
     /**

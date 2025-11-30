@@ -24,14 +24,14 @@ public class FuncionService {
      * Obtiene todas las funciones de un personal
      */
     public List<FuncionPolicial> getFuncionesByPersonalId(Long personalId) {
-        return funcionRepository.findByPersonalId(personalId);
+        return funcionRepository.findByPersonalIdPersonal(personalId);
     }
 
     /**
      * Obtiene funciones activas de un personal
      */
     public List<FuncionPolicial> getFuncionesActivasByPersonalId(Long personalId) {
-        return funcionRepository.findByPersonalIdAndActivoTrue(personalId);
+        return funcionRepository.findByPersonalIdPersonalAndActivoTrue(personalId);
     }
 
     /**

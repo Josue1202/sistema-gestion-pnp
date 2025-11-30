@@ -3,12 +3,12 @@ package com.pnp.auth.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +30,19 @@ public class JwtService {
      * Genera un token JWT para un usuario
      */
     public String generateToken(String username, String rol, String cip) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("rol", rol);
-        claims.put("cip", cip);
-        return createToken(claims, username);
+        try {
+            System.out.println("Generando token para: " + username);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("rol", rol);
+            claims.put("cip", cip);
+            String token = createToken(claims, username);
+            System.out.println("Token generado exitosamente");
+            return token;
+        } catch (Exception e) {
+            System.out.println("ERROR al generar token: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error al generar token JWT", e);
+        }
     }
 
     /**
@@ -50,10 +59,10 @@ public class JwtService {
     }
 
     /**
-     * Obtiene la clave de firma
+     * Obtiene la clave de firma (sin Base64, directo desde String)
      */
-    private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
+    private SecretKey getSignKey() {
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -84,7 +93,7 @@ public class JwtService {
      */
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith((javax.crypto.SecretKey) getSignKey())
+                .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

@@ -11,12 +11,8 @@ import java.util.Optional;
  */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    
+
     Optional<Usuario> findByUsername(String username);
-    
-    Optional<Usuario> findByCip(String cip);
-    
+
     Boolean existsByUsername(String username);
-    
-    Boolean existsByCip(String cip);
 }

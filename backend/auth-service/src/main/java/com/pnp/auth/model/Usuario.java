@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Representa un usuario del sistema con credenciales de acceso
  */
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +22,14 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long id;
+
+    @Column(name = "id_personal")
+    private Long idPersonal;
+
+    @Column(name = "id_rol")
+    private Long idRol;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
     @Size(min = 4, max = 50, message = "El nombre de usuario debe tener entre 4 y 50 caracteres")
@@ -30,34 +37,29 @@ public class Usuario {
     private String username;
 
     @NotBlank(message = "La contraseña es obligatoria")
-    @Column(nullable = false)
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
-    @Size(max = 20, message = "El CIP debe tener máximo 20 caracteres")
-    @Column(unique = true, length = 20)
-    private String cip;
-
-    @NotBlank(message = "El rol es obligatorio")
-    @Column(nullable = false, length = 20)
-    private String rol; // ADMIN, USUARIO
-
-    @Column(nullable = false)
+    @Column(name = "estado", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean activo = true;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "ultimo_acceso")
+    private LocalDateTime ultimoAcceso;
+
+    @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    // Campos transitorios para compatibilidad
+    @Transient
+    private String cip;
+
+    @Transient
+    private String rol;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        if (activo == null) {
+            activo = true;
+        }
     }
 }

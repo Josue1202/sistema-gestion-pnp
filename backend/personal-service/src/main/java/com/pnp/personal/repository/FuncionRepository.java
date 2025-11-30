@@ -11,8 +11,8 @@ import java.util.List;
  */
 @Repository
 public interface FuncionRepository extends JpaRepository<FuncionPolicial, Long> {
-    
-    List<FuncionPolicial> findByPersonalId(Long personalId);
-    
-    List<FuncionPolicial> findByPersonalIdAndActivoTrue(Long personalId);
+
+    List<FuncionPolicial> findByPersonalIdPersonal(Long idPersonal);
+
+    List<FuncionPolicial> findByPersonalIdPersonalAndActivoTrue(Long idPersonal);
 }
