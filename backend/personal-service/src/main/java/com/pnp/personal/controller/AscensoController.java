@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/ascensos")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AscensoController {
 
     private final AscensoRepository ascensoRepository;

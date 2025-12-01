@@ -29,6 +29,27 @@ spring:
           uri: lb://PERSONAL-SERVICE
           predicates:
             - Path=/api/funciones/**
+        
+        # Personal Service - Entidades relacionadas
+        - id: ascensos-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/ascensos/**
+        
+        - id: cursos-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/cursos/**
+        
+        - id: familiares-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/familiares/**
+        
+        - id: servicios-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/servicios/**
       
       # Configuración CORS global
       globalcors:

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/familiares")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class FamiliarController {
 
     private final FamiliarRepository familiarRepository;

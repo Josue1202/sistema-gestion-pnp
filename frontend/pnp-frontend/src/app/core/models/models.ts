@@ -1,5 +1,6 @@
 export interface PersonalPNP {
-    id?: number;
+    id?: number;           // Alias para compatibilidad
+    idPersonal?: number;   // Campo real del backend
     cip: string;
     dni: string;
     apellidoPaterno: string;

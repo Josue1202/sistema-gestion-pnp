@@ -3,7 +3,6 @@ package com.pnp.personal.controller;
 import com.pnp.personal.model.PersonalPNP;
 import com.pnp.personal.service.PersonalService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,13 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/personal")
-@RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class PersonalController {
 
     private final PersonalService personalService;
+
+    public PersonalController(PersonalService personalService) {
+        this.personalService = personalService;
+    }
 
     /**
      * Obtiene todo el personal
@@ -156,4 +157,5 @@ public class PersonalController {
         response.put("service", "personal-service");
         return ResponseEntity.ok(response);
     }
+
 }

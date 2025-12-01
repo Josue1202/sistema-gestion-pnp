@@ -18,7 +18,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/funciones")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class FuncionController {
 
     private final FuncionService funcionService;

@@ -115,14 +115,16 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-icon btn-info" (click)="viewDetails(personal.id!)" title="Ver detalles">
+                            <button class="btn-icon btn-info" (click)="viewDetails(personal.idPersonal!)"
+                                title="Ver detalles">
                                 <span class="material-icons">visibility</span>
                             </button>
-                            <button class="btn-icon btn-edit" (click)="editPersonal(personal.id!)" title="Editar">
+                            <button class="btn-icon btn-edit" (click)="editPersonal(personal.idPersonal!)"
+                                title="Editar">
                                 <span class="material-icons">edit</span>
                             </button>
-                            <button class="btn-icon btn-delete" (click)="deletePersonal(personal.id!, personal.nombres)"
-                                title="Eliminar">
+                            <button class="btn-icon btn-delete"
+                                (click)="deletePersonal(personal.idPersonal!, personal.nombres)" title="Eliminar">
                                 <span class="material-icons">delete</span>
                             </button>
                         </div>

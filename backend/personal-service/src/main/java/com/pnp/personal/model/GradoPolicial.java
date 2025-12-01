@@ -1,11 +1,13 @@
 package com.pnp.personal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "grado_policial")
 @Data
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class GradoPolicial {
 
     @Id

@@ -46,7 +46,7 @@ export interface FamiliarDTO {
     providedIn: 'root'
 })
 export class AscensoService {
-    private apiUrl = 'http://localhost:8082/api/ascensos';
+    private apiUrl = 'http://localhost:8080/api/ascensos';
 
     constructor(private http: HttpClient) { }
 
@@ -67,7 +67,7 @@ export class AscensoService {
     providedIn: 'root'
 })
 export class ServicioService {
-    private apiUrl = 'http://localhost:8082/api/servicios';
+    private apiUrl = 'http://localhost:8080/api/servicios';
 
     constructor(private http: HttpClient) { }
 
@@ -88,7 +88,7 @@ export class ServicioService {
     providedIn: 'root'
 })
 export class CursoService {
-    private apiUrl = 'http://localhost:8082/api/cursos';
+    private apiUrl = 'http://localhost:8080/api/cursos';
 
     constructor(private http: HttpClient) { }
 
@@ -109,7 +109,7 @@ export class CursoService {
     providedIn: 'root'
 })
 export class FamiliarService {
-    private apiUrl = 'http://localhost:8082/api/familiares';
+    private apiUrl = 'http://localhost:8080/api/familiares';
 
     constructor(private http: HttpClient) { }
 

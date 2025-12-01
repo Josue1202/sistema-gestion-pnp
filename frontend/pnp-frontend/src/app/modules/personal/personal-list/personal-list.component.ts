@@ -36,6 +36,7 @@ export class PersonalListComponent implements OnInit {
 
         this.personalService.getAllPersonal().subscribe({
             next: (data) => {
+                console.log('DEBUG - Primer elemento:', data[0]); // Ver estructura real
                 this.personalList = data;
                 this.filteredList = data;
                 this.loading = false;

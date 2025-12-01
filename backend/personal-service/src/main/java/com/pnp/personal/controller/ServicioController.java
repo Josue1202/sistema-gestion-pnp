@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/servicios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class ServicioController {
 
     private final ServicioRepository servicioRepository;

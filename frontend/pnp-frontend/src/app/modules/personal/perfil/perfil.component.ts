@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { PersonalService } from '../../../core/services/personal.service';
 import {
     AscensoService, AscensoDTO,
     ServicioService, ServicioDTO,
@@ -9,6 +12,8 @@ import {
 
 @Component({
     selector: 'app-perfil',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
     templateUrl: './perfil.component.html',
     styleUrls: ['./perfil.component.css']
 })
@@ -38,6 +43,7 @@ export class PerfilComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
+        private personalService: PersonalService,
         private ascensoService: AscensoService,
         private servicioService: ServicioService,
         private cursoService: CursoService,
@@ -45,22 +51,24 @@ export class PerfilComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.cip = this.route.snapshot.paramMap.get('cip') || '';
-        this.loadPersonal();
+        // Obtener ID desde la URL
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.loadPersonal(+id);
+        }
     }
 
-    loadPersonal(): void {
-        // Simulación - en producción llamar a PersonalService
-        this.personal = {
-            idPersonal: 1,
-            cip: this.cip,
-            nombres: 'Juan Carlos',
-            apellidos: 'García López',
-            grado: 'Capitán',
-            especialidad: 'Investigación Criminal'
-        };
-
-        this.loadEntidades();
+    loadPersonal(id: number): void {
+        // Cargar datos reales desde el backend
+        this.personalService.getPersonalById(id).subscribe({
+            next: (data) => {
+                console.log('DEBUG PERFIL - Datos recibidos:', data);
+                this.personal = data;
+                this.cip = data.cip;
+                this.loadEntidades();
+            },
+            error: (err) => console.error('Error cargando personal:', err)
+        });
     }
 
     loadEntidades(): void {
