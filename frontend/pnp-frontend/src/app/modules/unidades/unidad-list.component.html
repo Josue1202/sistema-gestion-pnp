@@ -1,0 +1,108 @@
+<div class="unidad-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>
+            <span class="material-icons">business</span>
+            Gestión de Unidades Policiales
+        </h1>
+        <button class="btn btn-primary" (click)="openModalCreate()">
+            <span class="material-icons">add</span>
+            Nueva Unidad
+        </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar card">
+        <div class="search-input-container">
+            <span class="material-icons">search</span>
+            <input type="text" class="search-input" placeholder="Buscar por nombre, siglas o tipo..."
+                [(ngModel)]="searchQuery" (input)="search()">
+            <button *ngIf="searchQuery" class="clear-btn" (click)=" clearSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card" *ngIf="!loading">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Siglas</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let unidad of filteredUnidades">
+                    <td>{{ unidad.idUnidad }}</td>
+                    <td>{{ unidad.nombre }}</td>
+                    <td>{{ unidad.siglas || '-' }}</td>
+                    <td>
+                        <span class="badge badge-{{ unidad.tipo }}">
+                            {{ getTipoLabel(unidad.tipo) }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" (click)="openModalEdit(unidad)" title="Editar">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn-icon btn-delete" (click)="delete(unidad.idUnidad)" title="Eliminar">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredUnidades.length === 0">
+                    <td colspan="5" class="text-center text-muted">No se encontraron unidades</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Cargando unidades...</p>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ isEditing ? 'Editar Unidad' : 'Nueva Unidad' }}</h2>
+            <button class="btn-close" (click)="closeModal()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" [(ngModel)]="formUnidad.nombre" class="form-control"
+                    placeholder="Ej: Comisaría Central">
+            </div>
+            <div class="form-group">
+                <label>Siglas</label>
+                <input type="text" [(ngModel)]="formUnidad.siglas" class="form-control" placeholder="Ej: CCENT">
+            </div>
+            <div class="form-group">
+                <label>Tipo *</label>
+                <select [(ngModel)]="formUnidad.tipo" class="form-control">
+                    <option *ngFor="let tipo of tiposUnidad" [value]="tipo">
+                        {{ getTipoLabel(tipo) }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button class="btn btn-primary" (click)="save()">
+                {{ isEditing ? 'Actualizar' : 'Crear' }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -50,6 +50,16 @@ spring:
           uri: lb://PERSONAL-SERVICE
           predicates:
             - Path=/api/servicios/**
+        
+        - id: unidades-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/unidades/**
+        
+        - id: grados-service
+          uri: lb://PERSONAL-SERVICE
+          predicates:
+            - Path=/api/grados/**
       
       # Configuración CORS global
       globalcors:

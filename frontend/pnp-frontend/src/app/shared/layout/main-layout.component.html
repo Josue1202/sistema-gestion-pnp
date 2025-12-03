@@ -1,0 +1,48 @@
+<div class="app-container" [class.sidebar-collapsed]="sidebarCollapsed">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="material-icons">shield</span>
+                <h2 *ngIf="!sidebarCollapsed">PNP</h2>
+            </div>
+            <button class="toggle-btn" (click)="toggleSidebar()">
+                <span class="material-icons">{{ sidebarCollapsed ? 'chevron_right' : 'chevron_left' }}</span>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a routerLink="/personal" routerLinkActive="active" class="nav-item">
+                <span class="material-icons">people</span>
+                <span class="nav-text" *ngIf="!sidebarCollapsed">Listado de Personal</span>
+            </a>
+
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <span class="material-icons">analytics</span>
+                <span class="nav-text" *ngIf="!sidebarCollapsed">Estadísticas</span>
+            </a>
+
+            <div class="nav-divider" *ngIf="!sidebarCollapsed"></div>
+
+            <a (click)="logout()" class="nav-item logout">
+                <span class="material-icons">logout</span>
+                <span class="nav-text" *ngIf="!sidebarCollapsed">Cerrar Sesión</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer" *ngIf="!sidebarCollapsed && currentUser">
+            <div class="user-info">
+                <span class="material-icons">account_circle</span>
+                <div class="user-details">
+                    <p class="user-name">{{ currentUser.username }}</p>
+                    <p class="user-role">{{ currentUser.role || 'Usuario' }}</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

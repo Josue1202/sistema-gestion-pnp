@@ -29,4 +29,12 @@ public interface PersonalRepository extends JpaRepository<PersonalPNP, Long> {
             "LOWER(p.cip) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(p.dni) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<PersonalPNP> searchPersonal(@Param("query") String query);
+
+    @Query("SELECT g.nombre as nombre, COUNT(p) as cantidad FROM PersonalPNP p " +
+            "JOIN p.grado g GROUP BY g.nombre ORDER BY cantidad DESC")
+    List<Object[]> countByGrado();
+
+    @Query("SELECT u.nombre as nombre, COUNT(p) as cantidad FROM PersonalPNP p " +
+            "JOIN p.unidadActual u GROUP BY u.nombre ORDER BY cantidad DESC")
+    List<Object[]> countByUnidad();
 }

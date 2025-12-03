@@ -5,6 +5,10 @@
             <p><strong>CIP:</strong> {{ personal?.cip }} | <strong>Grado:</strong> {{ personal?.grado?.nombre || 'N/A'
                 }}</p>
         </div>
+        <button class="btn btn-pdf" (click)="exportarPDF()" title="Exportar a PDF">
+            <span class="material-icons">picture_as_pdf</span>
+            Exportar PDF
+        </button>
     </div>
 
     <!-- Tabs Navigation -->
@@ -16,171 +20,179 @@
             servicios.length }})</button>
         <button [class.active]="activeTab === 'cursos'" (click)="activeTab = 'cursos'">Cursos ({{ cursos.length
             }})</button>
-        <h2>Historial de Ascensos</h2>
-        <button class="btn btn-primary" (click)="openModalAscenso()">+ Agregar Ascenso</button>
+        <button [class.active]="activeTab === 'familiares'" (click)="activeTab = 'familiares'">Familiares ({{
+            familiares.length }})</button>
     </div>
 
-    <div class="card" *ngIf="ascensos.length > 0">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Grado</th>
-                    <th>Fecha</th>
-                    <th>R.D.</th>
-                    <th>Motivo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let ascenso of ascensos">
-                    <td>{{ ascenso.grado }}</td>
-                    <td>{{ ascenso.fecha }}</td>
-                    <td>{{ ascenso.rd || '-' }}</td>
-                    <td>{{ ascenso.motivo || '-' }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger"
-                            (click)="eliminarAscenso(ascenso.idAscenso!)">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Tab Content: Datos Personales -->
+    <div class="tab-content" *ngIf="activeTab === 'datos'">
+        <div class="card">
+            <h2>Información Personal</h2>
+            <div class="info-grid">
+                <div><strong>CIP:</strong> {{ personal?.cip }}</div>
+                <div><strong>DNI:</strong> {{ personal?.dni }}</div>
+                <div><strong>Nombres:</strong> {{ personal?.nombres }}</div>
+                <div><strong>Apellidos:</strong> {{ personal?.apellidos }}</div>
+                <div><strong>Grado:</strong> {{ personal?.grado?.nombre }}</div>
+                <div><strong>Unidad:</strong> {{ personal?.unidadActual?.nombre }}</div>
+            </div>
+        </div>
     </div>
 
-    <div class="empty-state" *ngIf="ascensos.length === 0">
-        <p>No hay ascensos registrados</p>
+    <!-- Tab Content: Ascensos -->
+    <div class="tab-content" *ngIf="activeTab === 'ascensos'">
+        <div class="tab-header">
+            <h2>Historial de Ascensos</h2>
+            <button class="btn btn-primary" (click)="openModalAscenso()">+ Agregar Ascenso</button>
+        </div>
+
+        <div class="card" *ngIf="ascensos.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Grado</th>
+                        <th>Fecha</th>
+                        <th>R.D.</th>
+                        <th>Motivo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ascenso of ascensos">
+                        <td>{{ ascenso.grado }}</td>
+                        <td>{{ ascenso.fecha }}</td>
+                        <td>{{ ascenso.rd || '-' }}</td>
+                        <td>{{ ascenso.motivo || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarAscenso(ascenso.idAscenso!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="ascensos.length === 0">
+            <p>No hay ascensos registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Servicios -->
+    <div class="tab-content" *ngIf="activeTab === 'servicios'">
+        <div class="tab-header">
+            <h2>Historial de Servicios</h2>
+            <button class="btn btn-primary" (click)="openModalServicio()">+ Agregar Servicio</button>
+        </div>
+
+        <div class="card" *ngIf="servicios.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Unidad</th>
+                        <th>Cargo</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let servicio of servicios">
+                        <td>{{ servicio.unidad }}</td>
+                        <td>{{ servicio.cargo || '-' }}</td>
+                        <td>{{ servicio.desde }}</td>
+                        <td>{{ servicio.hasta || 'Actual' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarServicio(servicio.idServicio!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="servicios.length === 0">
+            <p>No hay servicios registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Cursos -->
+    <div class="tab-content" *ngIf="activeTab === 'cursos'">
+        <div class="tab-header">
+            <h2>Cursos y Capacitaciones</h2>
+            <button class="btn btn-primary" (click)="openModalCurso()">+ Agregar Curso</button>
+        </div>
+
+        <div class="card" *ngIf="cursos.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Nombre</th>
+                        <th>Lugar</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let curso of cursos">
+                        <td><span class="badge" [class.badge-primary]="curso.tipo === 'INSTITUCIONAL'"
+                                [class.badge-secondary]="curso.tipo === 'EXTRA'">{{ curso.tipo }}</span></td>
+                        <td>{{ curso.nombre }}</td>
+                        <td>{{ curso.lugar || '-' }}</td>
+                        <td>{{ curso.fecha || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarCurso(curso.idCurso!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="cursos.length === 0">
+            <p>No hay cursos registrados</p>
+        </div>
+    </div>
+
+    <!-- Tab Content: Familiares -->
+    <div class="tab-content" *ngIf="activeTab === 'familiares'">
+        <div class="tab-header">
+            <h2>Núcleo Familiar</h2>
+            <button class="btn btn-primary" (click)="openModalFamiliar()">+ Agregar Familiar</button>
+        </div>
+
+        <div class="card" *ngIf="familiares.length > 0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombres y Apellidos</th>
+                        <th>Parentesco</th>
+                        <th>Fecha Nac.</th>
+                        <th>Lugar Nac.</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let familiar of familiares">
+                        <td>{{ familiar.nombresApellidos }}</td>
+                        <td>{{ familiar.parentesco }}</td>
+                        <td>{{ familiar.fechaNac || '-' }}</td>
+                        <td>{{ familiar.lugarNac || '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                (click)="eliminarFamiliar(familiar.idFamiliar!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="familiares.length === 0">
+            <p>No hay familiares registrados</p>
+        </div>
     </div>
 </div>
 
-<!-- Tab Content: Servicios -->
-<div class="tab-content" *ngIf="activeTab === 'servicios'">
-    <div class="tab-header">
-        <h2>Historial de Servicios</h2>
-        <button class="btn btn-primary" (click)="openModalServicio()">+ Agregar Servicio</button>
-    </div>
-
-    <div class="card" *ngIf="servicios.length > 0">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Unidad</th>
-                    <th>Cargo</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let servicio of servicios">
-                    <td>{{ servicio.unidad }}</td>
-                    <td>{{ servicio.cargo || '-' }}</td>
-                    <td>{{ servicio.desde }}</td>
-                    <td>{{ servicio.hasta || 'Actual' }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger"
-                            (click)="eliminarServicio(servicio.idServicio!)">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="empty-state" *ngIf="servicios.length === 0">
-        <p>No hay servicios registrados</p>
-    </div>
-</div>
-
-<!-- Tab Content: Cursos -->
-<div class="tab-content" *ngIf="activeTab === 'cursos'">
-    <div class="tab-header">
-        <h2>Cursos y Capacitaciones</h2>
-        <button class="btn btn-primary" (click)="openModalCurso()">+ Agregar Curso</button>
-    </div>
-
-    <div class="card" *ngIf="cursos.length > 0">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Nombre</th>
-                    <th>Lugar</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let curso of cursos">
-                    <td><span class="badge" [class.badge-primary]="curso.tipo === 'INSTITUCIONAL'"
-                            [class.badge-secondary]="curso.tipo === 'EXTRA'">{{ curso.tipo }}</span></td>
-                    <td>{{ curso.nombre }}</td>
-                    <td>{{ curso.lugar || '-' }}</td>
-                    <td>{{ curso.fecha || '-' }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" (click)="eliminarCurso(curso.idCurso!)">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="empty-state" *ngIf="cursos.length === 0">
-        <p>No hay cursos registrados</p>
-    </div>
-</div>
-
-<!-- Tab Content: Familiares -->
-<div class="tab-content" *ngIf="activeTab === 'familiares'">
-    <div class="tab-header">
-        <h2>Núcleo Familiar</h2>
-        <button class="btn btn-primary" (click)="openModalFamiliar()">+ Agregar Familiar</button>
-    </div>
-
-    <div class="card" *ngIf="familiares.length > 0">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombres y Apellidos</th>
-                    <th>Parentesco</th>
-                    <th>Fecha Nac.</th>
-                    <th>Lugar Nac.</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let familiar of familiares">
-                    <td>{{ familiar.nombresApellidos }}</td>
-                    <td>{{ familiar.parentesco }}</td>
-                    <td>{{ familiar.fechaNac || '-' }}</td>
-                    <td>{{ familiar.lugarNac || '-' }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger"
-                            (click)="eliminarFamiliar(familiar.idFamiliar!)">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="empty-state" *ngIf="familiares.length === 0">
-        <p>No hay familiares registrados</p>
-    </div>
-</div>
-
-<!-- Tab Content: Asignaciones (solo lectura) -->
-<div class="tab-content" *ngIf="activeTab === 'asignaciones'">
-    <div class="card">
-        <h2>Asignaciones Diarias</h2>
-        <p class="text-muted">Funcionalidad en desarrollo</p>
-    </div>
-</div>
-
-<!-- Tab Content: Vacaciones (solo lectura) -->
-<div class="tab-content" *ngIf="activeTab === 'vacaciones'">
-    <div class="card">
-        <h2>Gestión de Vacaciones</h2>
-        <p class="text-muted">Funcionalidad en desarrollo</p>
-    </div>
-</div>
-</div>
 
 <!-- MODALES -->
 
@@ -211,7 +223,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="closeModalAscenso()">Cancelar</button>
-            <button class="btn btn-primary" (click)="agregarAscenso()">Guardar</button>
+            <button class="btn btn-primary" (click)="agregarAscenso()">Agregar</button>
         </div>
     </div>
 </div>
@@ -226,12 +238,13 @@
         <div class="modal-body">
             <div class="form-group">
                 <label>Unidad *</label>
-                <input type="text" [(ngModel)]="formServicio.unidad" class="form-control" placeholder="Ej: DIVINCRI">
+                <input type="text" [(ngModel)]="formServicio.unidad" class="form-control"
+                    placeholder="Ej: Comisaría Central">
             </div>
             <div class="form-group">
                 <label>Cargo</label>
                 <input type="text" [(ngModel)]="formServicio.cargo" class="form-control"
-                    placeholder="Ej: Jefe de División">
+                    placeholder="Ej: Jefe de Sección">
             </div>
             <div class="form-group">
                 <label>Desde *</label>
@@ -244,7 +257,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="closeModalServicio()">Cancelar</button>
-            <button class="btn btn-primary" (click)="agregarServicio()">Guardar</button>
+            <button class="btn btn-primary" (click)="agregarServicio()">Agregar</button>
         </div>
     </div>
 </div>
@@ -261,17 +274,17 @@
                 <label>Tipo *</label>
                 <select [(ngModel)]="formCurso.tipo" class="form-control">
                     <option value="INSTITUCIONAL">Institucional</option>
-                    <option value="EXTRA">Extra-Institucional</option>
+                    <option value="EXTRA">Extracurricular</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Nombre *</label>
                 <input type="text" [(ngModel)]="formCurso.nombre" class="form-control"
-                    placeholder="Ej: Curso de Investigación Criminal">
+                    placeholder="Ej: Liderazgo Policial">
             </div>
             <div class="form-group">
                 <label>Lugar</label>
-                <input type="text" [(ngModel)]="formCurso.lugar" class="form-control" placeholder="Ej: EO-PNP">
+                <input type="text" [(ngModel)]="formCurso.lugar" class="form-control" placeholder="Ej: EO PNP">
             </div>
             <div class="form-group">
                 <label>Fecha</label>
@@ -280,7 +293,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="closeModalCurso()">Cancelar</button>
-            <button class="btn btn-primary" (click)="agregarCurso()">Guardar</button>
+            <button class="btn btn-primary" (click)="agregarCurso()">Agregar</button>
         </div>
     </div>
 </div>
@@ -296,15 +309,16 @@
             <div class="form-group">
                 <label>Nombres y Apellidos *</label>
                 <input type="text" [(ngModel)]="formFamiliar.nombresApellidos" class="form-control"
-                    placeholder="Ej: María García López">
+                    placeholder="Ej: Juan Pérez García">
             </div>
             <div class="form-group">
                 <label>Parentesco *</label>
                 <select [(ngModel)]="formFamiliar.parentesco" class="form-control">
-                    <option value="CÓNYUGE">Cónyuge</option>
-                    <option value="HIJO">Hijo/a</option>
                     <option value="PADRE">Padre</option>
                     <option value="MADRE">Madre</option>
+                    <option value="CONYUGE">Cónyuge</option>
+                    <option value="HIJO">Hijo/a</option>
+                    <option value="HERMANO">Hermano/a</option>
                 </select>
             </div>
             <div class="form-group">
@@ -319,7 +333,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="closeModalFamiliar()">Cancelar</button>
-            <button class="btn btn-primary" (click)="agregarFamiliar()">Guardar</button>
+            <button class="btn btn-primary" (click)="agregarFamiliar()">Agregar</button>
         </div>
     </div>
 </div>

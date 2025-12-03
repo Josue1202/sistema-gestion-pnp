@@ -11,6 +11,15 @@
     border-radius: 12px;
     margin-bottom: 30px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.info-personal {
+    flex: 1;
 }
 
 .header-perfil h1 {
@@ -141,6 +150,24 @@
 .btn-sm {
     padding: 6px 12px;
     font-size: 14px;
+}
+
+.btn-pdf {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-pdf:hover {
+    background: white;
+    color: #667eea;
+    transform: translateY(-2px);
 }
 
 /* Modales */

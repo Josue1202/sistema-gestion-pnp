@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { PersonalService } from '../../../core/services/personal.service';
 import {
     AscensoService, AscensoDTO,
@@ -47,7 +50,8 @@ export class PerfilComponent implements OnInit {
         private ascensoService: AscensoService,
         private servicioService: ServicioService,
         private cursoService: CursoService,
-        private familiarService: FamiliarService
+        private familiarService: FamiliarService,
+        private toastr: ToastrService
     ) { }
 
     ngOnInit(): void {
@@ -227,5 +231,50 @@ export class PerfilComponent implements OnInit {
             },
             error: (err) => console.error('Error eliminando familiar:', err)
         });
+    }
+
+    // === EXPORTAR PDF ===
+    exportarPDF(): void {
+        if (!this.personal) {
+            this.toastr.warning('No hay datos para exportar', 'Atención');
+            return;
+        }
+
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFontSize(18);
+        doc.setTextColor(0, 61, 130);
+        doc.text('FICHA DE PERSONAL PNP', 105, 20, { align: 'center' });
+
+        // Línea decorativa
+        doc.setDrawColor(0, 61, 130);
+        doc.setLineWidth(0.5);
+        doc.line(20, 25, 190, 25);
+
+        // Datos Personales
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('DATOS PERSONALES', 20, 35);
+
+        doc.setFontSize(10);
+        const personalData = [
+            [`CIP: ${this.personal.cip || 'N/A'}`, `DNI: ${this.personal.dni || 'N/A'}`],
+            [`Nombres: ${this.personal.nombres || 'N/A'}`, `Apellidos: ${this.personal.apellidos || 'N/A'}`],
+            [`Grado: ${this.personal.grado?.nombre || 'N/A'}`, `Unidad: ${this.personal.unidadActual?.nombre || 'N/A'}`],
+            [`Estado: ${this.personal.estado || 'N/A'}`, `Condici\u00f3n: ${this.personal.condicion || 'N/A'}`]
+        ];
+
+        let yPos = 42;
+        personalData.forEach(row => {
+            doc.text(row[0], 20, yPos);
+            doc.text(row[1], 110, yPos);
+            yPos += 7;
+        });
+
+        // Ascensos
+        // Guardar
+        doc.save(`Ficha_${this.personal.cip}_${this.personal.apellidos}.pdf`);
+        this.toastr.success('PDF generado correctamente', '\u00c9xito');
     }
 }

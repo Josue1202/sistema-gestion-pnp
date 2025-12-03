@@ -148,6 +148,24 @@ public class PersonalController {
     }
 
     /**
+     * Obtiene estadísticas por grado para dashboard
+     */
+    @GetMapping("/stats/por-grado")
+    public ResponseEntity<List<Map<String, Object>>> getStatsPorGrado() {
+        List<Map<String, Object>> stats = personalService.getStatsPorGrado();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * Obtiene estadísticas por unidad para dashboard
+     */
+    @GetMapping("/stats/por-unidad")
+    public ResponseEntity<List<Map<String, Object>>> getStatsPorUnidad() {
+        List<Map<String, Object>> stats = personalService.getStatsPorUnidad();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
      * Health check
      */
     @GetMapping("/health")

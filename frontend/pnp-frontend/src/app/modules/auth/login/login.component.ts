@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -22,12 +23,13 @@ export class LoginComponent {
 
     constructor(
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private toastr: ToastrService
     ) { }
 
     onSubmit(): void {
         if (!this.credentials.username || !this.credentials.password) {
-            this.errorMessage = 'Por favor complete todos los campos';
+            this.toastr.warning('Por favor complete todos los campos', 'Atención');
             return;
         }
 
@@ -37,11 +39,13 @@ export class LoginComponent {
         this.authService.login(this.credentials).subscribe({
             next: (response) => {
                 this.loading = false;
-                this.router.navigate(['/dashboard']);
+                this.toastr.success('Bienvenido al sistema', 'Login exitoso');
+                this.router.navigate(['/personal']);
             },
             error: (error) => {
                 this.loading = false;
-                this.errorMessage = error.error?.error || 'Error al iniciar sesión';
+                const message = error.error?.error || 'Error al iniciar sesión';
+                this.toastr.error(message, 'Error de autenticación');
             }
         });
     }

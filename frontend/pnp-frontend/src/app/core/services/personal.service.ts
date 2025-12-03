@@ -50,8 +50,17 @@ export class PersonalService {
         return this.http.delete(`${this.apiUrl}/${id}`);
     }
 
+    // Estadísticas
     getStats(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/stats`);
+        return this.http.get<any>(`${this.apiUrl}/stats`);
+    }
+
+    getStatsPorGrado(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/stats/por-grado`);
+    }
+
+    getStatsPorUnidad(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/stats/por-unidad`);
     }
 
     // Funciones

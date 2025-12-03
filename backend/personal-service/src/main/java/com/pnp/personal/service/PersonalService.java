@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Servicio de gestión de personal PNP
@@ -156,6 +157,32 @@ public class PersonalService {
         stats.setEnLicencia(enLicencia);
 
         return stats;
+    }
+
+    /**
+     * Obtiene estadísticas por grado para dashboard
+     */
+    public List<Map<String, Object>> getStatsPorGrado() {
+        List<Object[]> results = personalRepository.countByGrado();
+        return results.stream().map(row -> {
+            Map<String, Object> map = new java.util.HashMap<>();
+            map.put("nombre", row[0]);
+            map.put("cantidad", row[1]);
+            return map;
+        }).collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Obtiene estadísticas por unidad para dashboard
+     */
+    public List<Map<String, Object>> getStatsPorUnidad() {
+        List<Object[]> results = personalRepository.countByUnidad();
+        return results.stream().map(row -> {
+            Map<String, Object> map = new java.util.HashMap<>();
+            map.put("nombre", row[0]);
+            map.put("cantidad", row[1]);
+            return map;
+        }).collect(java.util.stream.Collectors.toList());
     }
 
     // Clase interna para estadísticas
